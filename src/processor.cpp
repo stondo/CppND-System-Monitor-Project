@@ -1,26 +1,24 @@
 #include "processor.h"
 #include "linux_parser.h"
 
-// TODO: Return the aggregate CPU utilization
 float Processor::Utilization() {
-  long total_old, total_new, idle_old, idle_new, active;
-  total_new = LinuxParser::Jiffies();
-  active = LinuxParser::ActiveJiffies();
-  idle_new = LinuxParser::IdleJiffies();
+  long jiffies = LinuxParser::Jiffies();
+  long active = LinuxParser::ActiveJiffies();
+  long idle_new = LinuxParser::IdleJiffies();
 
-  total_old = Processor::total_;
-  idle_old = Processor::idle_;
+  long total_old = Processor::_total;
+  long idle_old = Processor::_idle;
 
-  UpdateValues(idle_new, active, total_new);
+  UpdateValues(idle_new, active, jiffies);
 
-  float total_delta = float(total_new - total_old);
-  float idle_detla = float(idle_new - idle_old);
+  float total_delta = jiffies - total_old;
+  float idle_detla = idle_new - idle_old;
 
   return (total_delta - idle_detla) / total_delta;
 }
 
 void Processor::UpdateValues(long idle, long active, long total) {
-  idle_ = idle;
-  active_ = active;
-  total_ = total;
+  _idle = idle;
+  _active = active;
+  _total = total;
 }

@@ -1,26 +1,26 @@
 #include "format.h"
 
 #include <string>
+#include <iostream>
+#include <iomanip>
 
 using std::string;
+using std::to_string;
+using std::stringstream;
 
-// TODO: Complete this helper function
-// INPUT: Long int measuring seconds
-// OUTPUT: HH:MM:SS
-// REMOVE: [[maybe_unused]] once you define the function
+static const size_t n_zero = 2;
+
 string Format::ElapsedTime(long seconds) {
   int hrs, mins, secs;
+  stringstream formatted_time;
   hrs = (seconds / 3600) % 100;
   mins = (seconds / 60) % 60;
   secs = seconds % 60;
 
-  string secs_str = std::to_string(secs);
-  string mins_str = std::to_string(mins);
-  string hrs_str = std::to_string(hrs);
-
-  secs_str.insert(0, 2 - secs_str.length(), 0);
-  mins_str.insert(0, 2 - mins_str.length(), 0);
-  hrs_str.insert(0, 2 - hrs_str.length(), 0);
-
-  return hrs_str + ":" + mins_str + ":" + secs_str;
+  string hrs_with_zeros = string(n_zero - std::min(n_zero, to_string(hrs).length()), '0') + to_string(hrs);
+  string mins_with_zeros = string(n_zero - std::min(n_zero, to_string(mins).length()), '0') + to_string(mins);
+  string secs_with_zeros = string(n_zero - std::min(n_zero, to_string(secs).length()), '0') + to_string(secs);
+  
+  formatted_time << hrs_with_zeros << ":" << mins_with_zeros << ":" << secs_with_zeros;
+  return formatted_time.str();
 }
